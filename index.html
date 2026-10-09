@@ -86,7 +86,7 @@ ul.f li:before{content:'';display:inline-block;width:14px;height:8px;border-radi
 var n=0;
 var E=function(t,c,st){return '<div class="e '+(c||'')+'" contenteditable style="'+(st||'')+'">'+t+'</div>'};
 var I=function(st,c){return '<div class="slot '+(c||'')+'" data-id="i'+(n++)+'" style="'+(st||'')+'"><span>click to add image</span><input type="file" accept="image/*" hidden></div>'};
-var V=function(st){return '<div class="vs" data-id="v'+(n++)+'" style="'+(st||'')+'"><div class="vm">video</div><div class="vc"><input class="lk" placeholder="paste link, press Enter"><button class="fb">upload</button><input class="fi" type="file" accept="video/*" hidden></div></div>'};
+var videoN=0;var V=function(st){var src='videos/video'+(++videoN)+'.mp4';return '<div class="vs" data-id="v'+(n++)+'" style="'+(st||'')+'"><div class="vm"><video src="'+src+'" controls playsinline preload="metadata"></video></div><div class="vc"><input class="lk" placeholder="video path: '+src+'" value="'+src+'"><button class="fb" type="button">Load</button><input class="fi" type="file" accept="video/*" hidden></div></div>'};
 var HD=function(a,b,tag,x,r){return '<div class="hd"><span class="o">'+a+'</span><br>'+b+'</div><div class="stamp" style="left:'+x+'px;top:66px;transform:rotate('+r+'deg)">'+tag+'</div>'};
 var LG='<div class="logo">mayuri<br>maurya<small>creative strategist</small></div>';
 var grid=function(cols,w,top,h,items){return '<div class="g" style="left:70px;top:'+top+'px;width:'+w+'px;grid-template-columns:repeat('+cols+',1fr);grid-auto-rows:'+h+'px">'+items+'</div>'};
@@ -145,7 +145,7 @@ document.querySelectorAll('.slot').forEach(function(el){var v=ls(el.dataset.id);
 document.querySelectorAll('.vs').forEach(function(el){var v=ls(el.dataset.id);if(v){setVid(el,embed(v));el.querySelector('.lk').value=v}});
 document.addEventListener('click',function(e){var t=e.target;
  if(PUB)return;
- if(t.classList.contains('fb')){t.nextElementSibling.click();return}
+ if(t.classList.contains('fb')){var box=t.closest('.vs'),inp=box&&box.querySelector('.lk'),u=inp&&inp.value.trim();if(u){setVid(box,embed(u))}return}
  var s=t.closest('.slot');if(s&&t.tagName!=='INPUT')s.querySelector('input').click()});
 document.addEventListener('change',function(e){var t=e.target,f=t.files&&t.files[0];if(!f)return;
  var s=t.closest('.slot'),vs=t.closest('.vs');
@@ -154,7 +154,7 @@ document.addEventListener('change',function(e){var t=e.target,f=t.files&&t.files
 document.addEventListener('keydown',function(e){var t=e.target;
  if(t.classList&&t.classList.contains('lk')&&e.key==='Enter'){var u=t.value.trim();if(u){var vs=t.closest('.vs');delete VF[vs.dataset.id];setVid(vs,embed(u));ls(vs.dataset.id,u)}return}
 });
-if(PUB){document.body.classList.add('pub');document.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable')});document.querySelectorAll('.vs').forEach(function(v){if(!ls(v.dataset.id))v.querySelector('.vm').textContent=''})}
+if(PUB){document.body.classList.add('pub');document.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable')})}
 var VF={},FILES=[];
 var CT=(function(){var T=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;T[n]=c>>>0}return T})();
 function crc(b){var c=0xFFFFFFFF;for(var i=0;i<b.length;i++)c=CT[(c^b[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
